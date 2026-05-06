@@ -1,0 +1,53 @@
+# VPC
+
+vpc_cidr = "10.0.0.0/16"
+
+availability_zones = [
+  "eu-west-2a",
+  "eu-west-2b"
+]
+
+public_subnet_cidrs = [
+  "10.0.0.0/20",
+  "10.0.16.0/20"
+]
+
+private_subnet_cidrs = [
+  "10.0.32.0/20",
+  "10.0.48.0/20"
+]
+
+
+# IAM
+
+cluster_role_name = "eks-sre-platform-cluster-role"
+cluster_name      = "eks-sre-platform"
+node_role_name    = "eks-sre-platform-node-role"
+
+
+# EKS
+
+instance_types    = ["t3.medium"]
+node_desired_size = 2
+node_min_size     = 1
+node_max_size     = 3
+
+
+# ECR
+
+repository_name = "sre-demo-app"
+max_image_count = 10
+
+
+# Route53
+
+domain_name     = "nourdemo.com"
+app_domain_name = "eks.nourdemo.com"
+
+
+# Global Tags
+
+tags = {
+  Name    = "eks-sre-platform"
+  Project = "eks-sre-platform"
+}
