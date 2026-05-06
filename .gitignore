@@ -1,32 +1,44 @@
 # Terraform
 
-.terraform/
+
+**/.terraform/*
 *.tfstate
 *.tfstate.*
 *.tfvars
+*.tfplan
+
 crash.log
 crash.*.log
+
 override.tf
 override.tf.json
 *_override.tf
 *_override.tf.json
 
+.terraform.lock.hcl
+
 
 # Kubernetes / EKS
+
 
 kubeconfig*
 .kube/
 *.kubeconfig
 
 
-# Backstage / Node
+# Python
 
-node_modules/
-dist/
-build/
-yarn-error.log
-npm-debug.log*
-.pnpm-debug.log*
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+.venv/
+venv/
+env/
+
+.pytest_cache/
+.mypy_cache/
 
 
 # Docker
@@ -35,19 +47,37 @@ npm-debug.log*
 docker-compose.override.yml
 
 
+# Helm / Kubernetes Generated Files
+
+charts/
+*.tgz
+
+
 # OS / IDE
 
 .DS_Store
 Thumbs.db
+
 .vscode/
 .idea/
+
 *.swp
+*.swo
 
 
-# Secrets / Env
+
+# Secrets / Environment Files
 
 .env
 .env.*
+
 *.pem
 *.key
 *.crt
+
+
+# Misc
+
+coverage/
+dist/
+build/
