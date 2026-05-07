@@ -45,3 +45,7 @@ Example:
 - Trivy scan outputs
 - Terraform apply timings
 - Load test results
+
+1st metric tracked 22:03, 06/05/2026,  (docker images sre-demo-app:local)                                      ░▒▓ IMAGE                ID             DISK USAGE   CONTENT SIZE   EXTRA
+sre-demo-app:local   b092aaf8b889        244MB         58.5MB    U A
+sre-demo-app:local   b092aaf8b889        244MB         58.5MB    U  
