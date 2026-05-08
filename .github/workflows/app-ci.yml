@@ -1,0 +1,79 @@
+name: App CI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "app/**"
+      - "helm/sre-demo-app/**"
+      - ".github/workflows/app-ci.yml"
+
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: write
+
+env:
+  AWS_REGION: eu-west-2
+  ECR_REPOSITORY: sre-demo-app
+  HELM_VALUES_FILE: helm/sre-demo-app/values.yaml
+
+jobs:
+  build-scan-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set image tag
+        run: echo "IMAGE_TAG=${GITHUB_SHA::7}" >> $GITHUB_ENV
+
+      - name: Build image
+        run: docker build -t $ECR_REPOSITORY:$IMAGE_TAG ./app
+
+      - name: Scan image
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: ${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+          format: table
+          exit-code: "0"
+          ignore-unfixed: true
+          vuln-type: os,library
+          severity: HIGH,CRITICAL
+
+      - name: Tag image
+        run: |
+          docker tag \
+            $ECR_REPOSITORY:$IMAGE_TAG \
+            ${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY:$IMAGE_TAG
+
+      - name: Push image
+        run: |
+          docker push \
+            ${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY:$IMAGE_TAG
+
+      - name: Update Helm values
+        run: |
+          sed -i "s|repository:.*|repository: ${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY|" $HELM_VALUES_FILE
+          sed -i "s|tag:.*|tag: $IMAGE_TAG|" $HELM_VALUES_FILE
+
+      - name: Commit image tag
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add $HELM_VALUES_FILE
+          git commit -m "chore: update image tag to $IMAGE_TAG" || echo "No changes"
+          git push
