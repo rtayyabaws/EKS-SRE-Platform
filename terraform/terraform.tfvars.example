@@ -1,4 +1,5 @@
-# VPC
+aws_region   = "eu-west-2"
+project_name = "eks-sre-platform"
 
 vpc_cidr = "10.0.0.0/16"
 
@@ -17,37 +18,21 @@ private_subnet_cidrs = [
   "10.0.48.0/20"
 ]
 
-
-# IAM
-
-cluster_role_name = "eks-sre-platform-cluster-role"
-cluster_name      = "eks-sre-platform"
-node_role_name    = "eks-sre-platform-node-role"
-
-
-# EKS
+cluster_name       = "eks-sre-platform"
+kubernetes_version = "1.29"
 
 instance_types    = ["t3.medium"]
 node_desired_size = 2
 node_min_size     = 1
 node_max_size     = 3
 
-
-# ECR
-
 repository_name = "sre-demo-app"
 max_image_count = 10
-
-
-# Route53
 
 domain_name     = "nourdemo.com"
 app_domain_name = "eks.nourdemo.com"
 
-
-# Global Tags
-
 tags = {
-  Name    = "eks-sre-platform"
-  Project = "eks-sre-platform"
+  Project   = "eks-sre-platform"
+  ManagedBy = "Terraform"
 }

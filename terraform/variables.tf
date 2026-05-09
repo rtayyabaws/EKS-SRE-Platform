@@ -1,75 +1,84 @@
-# VPC
+variable "aws_region" {
+  description = "AWS region used for the EKS platform."
+  type        = string
+}
+
+variable "project_name" {
+  description = "Name used for platform resources."
+  type        = string
+}
 
 variable "vpc_cidr" {
-  type = string
+  description = "CIDR block for the platform VPC."
+  type        = string
 }
 
 variable "availability_zones" {
-  type = list(string)
+  description = "Availability zones used across the VPC."
+  type        = list(string)
 }
 
 variable "public_subnet_cidrs" {
-  type = list(string)
+  description = "CIDR blocks for public subnets used by load balancers."
+  type        = list(string)
 }
 
 variable "private_subnet_cidrs" {
-  type = list(string)
+  description = "CIDR blocks for private subnets used by EKS nodes."
+  type        = list(string)
 }
-
-# IAM
-
-variable "cluster_role_name" {
-  type = string
-}
-
-variable "node_role_name" {
-  type = string
-}
-
-# EKS
 
 variable "cluster_name" {
-  type = string
+  description = "Name of the EKS cluster."
+  type        = string
+}
+
+variable "kubernetes_version" {
+  description = "Kubernetes version for the EKS cluster."
+  type        = string
 }
 
 variable "instance_types" {
-  type = list(string)
+  description = "EC2 instance types for the EKS managed node group."
+  type        = list(string)
 }
 
 variable "node_desired_size" {
-  type = number
+  description = "Desired number of EKS worker nodes."
+  type        = number
 }
 
 variable "node_min_size" {
-  type = number
+  description = "Minimum number of EKS worker nodes."
+  type        = number
 }
 
 variable "node_max_size" {
-  type = number
+  description = "Maximum number of EKS worker nodes."
+  type        = number
 }
 
-# ECR
-
 variable "repository_name" {
-  type = string
+  description = "ECR repository name for the application image."
+  type        = string
 }
 
 variable "max_image_count" {
-  type = number
+  description = "Maximum number of container images retained in ECR."
+  type        = number
 }
 
-# Route53
-
 variable "domain_name" {
-  type = string
+  description = "Root Route53 hosted zone domain."
+  type        = string
 }
 
 variable "app_domain_name" {
-  type = string
+  description = "Application subdomain managed by ExternalDNS."
+  type        = string
 }
 
-# Global
-
 variable "tags" {
-  type = map(string)
+  description = "Common tags applied to AWS resources."
+  type        = map(string)
 }
