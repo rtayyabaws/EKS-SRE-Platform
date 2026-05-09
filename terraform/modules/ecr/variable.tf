@@ -1,16 +1,14 @@
 variable "repository_name" {
-  description = "Name of the ECR repository"
+  description = "Name of the ECR repository."
   type        = string
 }
 
 variable "max_image_count" {
-  description = "Maximum number of images to keep in the repository"
+  description = "Maximum number of images retained by lifecycle policy."
   type        = number
-  default     = 10
 }
 
 variable "tags" {
-  description = "Tags applied to the ECR repository"
+  description = "Common tags applied to ECR resources."
   type        = map(string)
-  default     = {}
 }
