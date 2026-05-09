@@ -1,6 +1,7 @@
 module "vpc" {
   source = "./modules/vpc"
 
+  project_name         = var.project_name
   vpc_cidr             = var.vpc_cidr
   availability_zones   = var.availability_zones
   public_subnet_cidrs  = var.public_subnet_cidrs
@@ -11,17 +12,17 @@ module "vpc" {
 module "iam" {
   source = "./modules/iam"
 
-  cluster_role_name = var.cluster_role_name
-  node_role_name    = var.node_role_name
-  tags              = var.tags
+  project_name = var.project_name
+  tags         = var.tags
 }
 
 module "eks" {
   source = "./modules/eks"
 
   cluster_name       = var.cluster_name
-  cluster_role_arn = module.iam.eks_cluster_role_arn
-  node_role_arn    = module.iam.eks_node_role_arn
+  kubernetes_version = var.kubernetes_version
+  cluster_role_arn   = module.iam.eks_cluster_role_arn
+  node_role_arn      = module.iam.eks_node_role_arn
   private_subnet_ids = module.vpc.private_subnet_ids
 
   instance_types    = var.instance_types
@@ -43,7 +44,5 @@ module "ecr" {
 module "route53" {
   source = "./modules/route53"
 
-  domain_name     = var.domain_name
-  app_domain_name = var.app_domain_name
-  tags            = var.tags
+  domain_name = var.domain_name
 }
