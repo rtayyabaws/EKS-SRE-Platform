@@ -1,50 +1,49 @@
 variable "cluster_name" {
+  description = "Name of the EKS cluster."
   type        = string
-  description = "Name of the EKS cluster"
 }
 
 variable "kubernetes_version" {
+  description = "Kubernetes version used by EKS."
   type        = string
-  description = "EKS Kubernetes version"
-  default     = "1.29"
 }
 
 variable "cluster_role_arn" {
+  description = "IAM role ARN for the EKS control plane."
   type        = string
-  description = "IAM role ARN for the EKS control plane"
 }
 
 variable "node_role_arn" {
+  description = "IAM role ARN for the EKS managed node group."
   type        = string
-  description = "IAM role ARN for the EKS node group"
 }
 
 variable "private_subnet_ids" {
+  description = "Private subnet IDs used by EKS worker nodes."
   type        = list(string)
-  description = "Private subnet IDs for EKS"
 }
 
 variable "instance_types" {
+  description = "EC2 instance types used by the managed node group."
   type        = list(string)
-  default     = ["t3.medium"]
 }
 
 variable "node_desired_size" {
-  type    = number
-  default = 2
+  description = "Desired number of worker nodes."
+  type        = number
 }
 
 variable "node_min_size" {
-  type    = number
-  default = 1
+  description = "Minimum number of worker nodes."
+  type        = number
 }
 
 variable "node_max_size" {
-  type    = number
-  default = 3
+  description = "Maximum number of worker nodes."
+  type        = number
 }
 
 variable "tags" {
-  type    = map(string)
-  default = {}
+  description = "Common tags applied to EKS resources."
+  type        = map(string)
 }
