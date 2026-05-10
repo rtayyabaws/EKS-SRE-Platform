@@ -1,14 +1,9 @@
 output "zone_id" {
-  description = "Route53 hosted zone ID"
-  value       = aws_route53_zone.this.zone_id
+  description = "Route53 hosted zone ID."
+  value       = data.aws_route53_zone.this.zone_id
 }
 
-output "name_servers" {
-  description = "Route53 name servers"
-  value       = aws_route53_zone.this.name_servers
-}
-
-output "certificate_arn" {
-  description = "ACM certificate ARN"
-  value       = aws_acm_certificate.this.arn
+output "zone_name" {
+  description = "Route53 hosted zone name."
+  value       = data.aws_route53_zone.this.name
 }

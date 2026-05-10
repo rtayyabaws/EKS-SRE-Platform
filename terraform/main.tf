@@ -21,8 +21,10 @@ module "eks" {
 
   cluster_name       = var.cluster_name
   kubernetes_version = var.kubernetes_version
-  cluster_role_arn   = module.iam.eks_cluster_role_arn
-  node_role_arn      = module.iam.eks_node_role_arn
+
+  cluster_role_arn = module.iam.eks_cluster_role_arn
+  node_role_arn    = module.iam.eks_node_role_arn
+
   private_subnet_ids = module.vpc.private_subnet_ids
 
   instance_types    = var.instance_types
