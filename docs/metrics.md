@@ -65,3 +65,9 @@ sre-demo-app:local   b092aaf8b889        244MB         58.5MB    U
 | Observability | Prometheus metrics endpoint | `/metrics` exposed | Enables application-level monitoring and scraping |
 | Security | NetworkPolicy enforcement | Enabled | Restricts inbound pod traffic and improves workload isolation |
 | Availability | Replica count | 2 replicas | Improves workload resilience and reduces single-pod failure impact |
+
+
+| Terraform | Remote backend bootstrap | Successful | Created S3-backed Terraform state with versioning, encryption and public access blocking |
+| Terraform | State locking method | S3 native lockfile | Avoided deprecated DynamoDB state locking and enabled safe remote backend locking |
+| Terraform | Platform plan result | 28 to add, 0 to change, 0 to destroy | Validated full EKS platform infrastructure before first apply |
+| Terraform | Route53 hosted zone lookup | Successful | Confirmed Terraform can reference existing hosted zone for `nourdemo.com` |
