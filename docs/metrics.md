@@ -71,3 +71,6 @@ sre-demo-app:local   b092aaf8b889        244MB         58.5MB    U
 | Terraform | State locking method | S3 native lockfile | Avoided deprecated DynamoDB state locking and enabled safe remote backend locking |
 | Terraform | Platform plan result | 28 to add, 0 to change, 0 to destroy | Validated full EKS platform infrastructure before first apply |
 | Terraform | Route53 hosted zone lookup | Successful | Confirmed Terraform can reference existing hosted zone for `nourdemo.com` |
+
+
+Plan: 28 to add, 0 to change, 0 to destroy. for infra
