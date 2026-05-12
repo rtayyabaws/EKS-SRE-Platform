@@ -47,3 +47,8 @@ variable "tags" {
   description = "Common tags applied to EKS resources."
   type        = map(string)
 }
+
+variable "cluster_admin_principal_arn" {
+  description = "IAM principal ARN to grant admin access to the EKS cluster"
+  type        = string
+}

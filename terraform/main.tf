@@ -33,6 +33,9 @@ module "eks" {
   node_max_size     = var.node_max_size
 
   tags = var.tags
+
+  cluster_admin_principal_arn = "arn:aws:iam::595552412690:user/nour-nonroot"
+
 }
 
 module "ecr" {
