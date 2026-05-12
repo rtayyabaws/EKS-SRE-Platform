@@ -32,3 +32,7 @@ output "route53_zone_id" {
   description = "Route53 hosted zone ID."
   value       = module.route53.zone_id
 }
+
+output "github_actions_role_arn" {
+  value = module.iam.github_actions_role_arn
+}
