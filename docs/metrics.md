@@ -86,3 +86,16 @@ Plan: 28 to add, 0 to change, 0 to destroy. for infra
 | Node networking | Private subnets |
 | kubectl access | Confirmed |
 | IAM access issue resolved | Added EKS access entry + cluster admin policy association |
+
+## GitOps / ArgoCD
+
+| Metric | Result |
+|---|---|
+| ArgoCD root app | Synced / Healthy |
+| cert-manager | Synced / Healthy |
+| ClusterIssuer | Synced / Healthy |
+| ExternalDNS | Synced / Healthy |
+| ingress-nginx | Synced / Healthy |
+| Loki | Synced / Healthy |
+| Demo app | Synced / Progressing |
+| kube-prometheus-stack | Healthy, OutOfSync |

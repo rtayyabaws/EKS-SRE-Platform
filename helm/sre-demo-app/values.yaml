@@ -1,7 +1,7 @@
 replicaCount: 2
 
 image:
-  repository: sre-demo-app
+  repository: 595552412690.dkr.ecr.eu-west-2.amazonaws.com/sre-demo-app
   tag: local
   pullPolicy: IfNotPresent
 
