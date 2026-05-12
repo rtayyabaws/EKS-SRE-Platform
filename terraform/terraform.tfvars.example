@@ -19,7 +19,7 @@ private_subnet_cidrs = [
 ]
 
 cluster_name       = "eks-sre-platform"
-kubernetes_version = "1.29"
+kubernetes_version = "1.32"
 
 instance_types    = ["t3.medium"]
 node_desired_size = 2
