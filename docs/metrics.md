@@ -74,3 +74,15 @@ sre-demo-app:local   b092aaf8b889        244MB         58.5MB    U
 
 
 Plan: 28 to add, 0 to change, 0 to destroy. for infra
+
+## EKS Cluster Provisioning
+
+| Metric | Result |
+|---|---|
+| Terraform resources created | 28 |
+| EKS cluster name | eks-sre-platform |
+| Kubernetes version | v1.32.13-eks-4136f65 |
+| Worker nodes ready | 2/2 |
+| Node networking | Private subnets |
+| kubectl access | Confirmed |
+| IAM access issue resolved | Added EKS access entry + cluster admin policy association |
