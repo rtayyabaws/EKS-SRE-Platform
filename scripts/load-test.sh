@@ -7,10 +7,14 @@ echo "Press CTRL+C to stop."
 
 while true
 do
-  curl -s "$URL" > /dev/null
-  curl -s "$URL/healthz" > /dev/null
-  curl -s "$URL/readyz" > /dev/null
-  curl -s "$URL/slow" > /dev/null
-  echo "Requests sent at $(date '+%H:%M:%S')"
-  sleep 0.2
+  for i in {1..20}; do
+    curl -s "$URL" > /dev/null &
+    curl -s "$URL/healthz" > /dev/null &
+    curl -s "$URL/readyz" > /dev/null &
+    curl -s "$URL/slow" > /dev/null &
+  done
+
+  wait
+  echo "Batch sent at $(date '+%H:%M:%S')"
+  sleep 1
 done
