@@ -21,3 +21,7 @@ output "eks_node_role_name" {
 output "github_actions_role_arn" {
   value = aws_iam_role.github_actions.arn
 }
+
+output "external_dns_role_arn" {
+  value = aws_iam_role.external_dns.arn
+}

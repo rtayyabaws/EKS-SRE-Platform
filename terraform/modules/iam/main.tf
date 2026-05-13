@@ -136,3 +136,56 @@ resource "aws_iam_role_policy_attachment" "github_actions_ecr" {
   role       = aws_iam_role.github_actions.name
   policy_arn = aws_iam_policy.github_actions_ecr.arn
 }
+
+resource "aws_iam_role" "external_dns" {
+  name = "${var.project_name}-external-dns-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "pods.eks.amazonaws.com"
+        }
+        Action = [
+          "sts:AssumeRole",
+          "sts:TagSession"
+        ]
+      }
+    ]
+  })
+
+  tags = var.tags
+}
+
+resource "aws_iam_policy" "external_dns_route53" {
+  name = "${var.project_name}-external-dns-route53-policy"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "route53:ChangeResourceRecordSets"
+        ]
+        Resource = "arn:aws:route53:::hostedzone/Z02511943Q6RIQDL3GQVU"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "route53:ListHostedZones",
+          "route53:ListResourceRecordSets",
+          "route53:ListTagsForResource"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "external_dns_route53" {
+  role       = aws_iam_role.external_dns.name
+  policy_arn = aws_iam_policy.external_dns_route53.arn
+}

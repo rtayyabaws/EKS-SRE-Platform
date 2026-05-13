@@ -51,3 +51,10 @@ module "route53" {
 
   domain_name = var.domain_name
 }
+
+resource "aws_eks_pod_identity_association" "external_dns" {
+  cluster_name    = module.eks.cluster_name
+  namespace       = "external-dns"
+  service_account = "external-dns"
+  role_arn        = module.iam.external_dns_role_arn
+}
