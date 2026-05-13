@@ -3,6 +3,7 @@ kind: Application
 metadata:
   name: kube-prometheus-stack
   namespace: argocd
+
 spec:
   project: default
 
@@ -10,8 +11,10 @@ spec:
     repoURL: https://prometheus-community.github.io/helm-charts
     chart: kube-prometheus-stack
     targetRevision: 69.8.2
+
     helm:
       releaseName: kube-prometheus-stack
+
       values: |
         grafana:
           enabled: true
@@ -33,5 +36,7 @@ spec:
     automated:
       prune: true
       selfHeal: true
+
     syncOptions:
       - CreateNamespace=true
+      - ServerSideApply=true

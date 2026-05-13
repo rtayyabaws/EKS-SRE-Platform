@@ -107,3 +107,10 @@ sre-demo-app-854688b6f4-w89mr   1/1     Running   0          71s
 NAMESPACE      NAME                        CLASS    HOSTS              ADDRESS                                                                         PORTS     AGE
 sre-demo-app   cm-acme-http-solver-v9dgm   <none>   eks.nourdemo.com   a64e82e543f6b4c44b910975d828d635-04fd99b7fb336104.elb.eu-west-2.amazonaws.com   80        64m
 sre-demo-app   sre-demo-app                nginx    eks.nourdemo.com   a64e82e543f6b4c44b910975d828d635-04fd99b7fb336104.elb.eu-west-2.amazonaws.com   80, 443   64m
+
+ kubectl get certificate -A                      ░▒▓ ✔  eks-sre-platform ○  01:45:14 PM 
+curl https://eks.nourdemo.com
+curl https://eks.nourdemo.com/healthz
+NAMESPACE      NAME               READY   SECRET             AGE
+sre-demo-app   sre-demo-app-tls   True    sre-demo-app-tls   36m
+{"service":"eks-sre-platform","message":"SRE demo application running on Kubernetes","version":"local"}{"status":"healthy"}%                       
