@@ -1,13 +1,6 @@
 name: Terraform Apply
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - "terraform/**"
-      - ".github/workflows/terraform-apply.yml"
-
   workflow_dispatch:
 
 permissions:

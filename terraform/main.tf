@@ -36,6 +36,10 @@ module "eks" {
 
   cluster_admin_principal_arn = "arn:aws:iam::595552412690:user/nour-nonroot"
 
+  source = "./modules/eks"
+  # ... existing vars ...
+  github_actions_role_arn = module.iam.github_actions_role_arn
+
 }
 
 module "ecr" {

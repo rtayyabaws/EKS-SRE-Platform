@@ -75,5 +75,5 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add $HELM_VALUES_FILE
-          git commit -m "chore: update image tag to $IMAGE_TAG" || echo "No changes"
+          git commit -m "chore: update image tag to $IMAGE_TAG [skip ci]" || echo "No changes"
           git push
