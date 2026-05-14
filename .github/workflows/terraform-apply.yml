@@ -9,7 +9,6 @@ permissions:
 
 env:
   AWS_REGION: eu-west-2
-  TF_VAR_app_domain_name: eks.nourdemo.com
 
 jobs:
   terraform-apply:
@@ -34,6 +33,9 @@ jobs:
 
       - name: Terraform init
         run: terraform init
+
+      - name: Copy tfvars for CI
+        run: cp terraform.tfvars.example terraform.tfvars
 
       - name: Terraform apply
         run: terraform apply -auto-approve
