@@ -76,10 +76,10 @@ variable "domain_name" {
 variable "app_domain_name" {
   description = "Application subdomain managed by ExternalDNS."
   type        = string
+  default     = "eks.nourdemo.com"
 }
 
 variable "tags" {
   description = "Common tags applied to AWS resources."
   type        = map(string)
 }
-
