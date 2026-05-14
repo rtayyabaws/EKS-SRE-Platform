@@ -245,3 +245,56 @@ resource "aws_iam_role_policy_attachment" "github_actions_eks" {
   role       = aws_iam_role.github_actions.name
   policy_arn = aws_iam_policy.github_actions_eks.arn
 }
+
+resource "aws_iam_policy" "github_actions_iam" {
+  name = "${var.project_name}-github-actions-iam-policy"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "iam:GetRole",
+          "iam:GetPolicy",
+          "iam:GetPolicyVersion",
+          "iam:GetOpenIDConnectProvider",
+          "iam:ListRolePolicies",
+          "iam:ListAttachedRolePolicies",
+          "iam:ListInstanceProfilesForRole",
+          "iam:ListPolicyVersions",
+          "iam:CreateRole",
+          "iam:CreatePolicy",
+          "iam:AttachRolePolicy",
+          "iam:PassRole",
+          "iam:TagRole",
+          "iam:TagPolicy"
+        ]
+        Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "route53:ListHostedZones",
+          "route53:GetHostedZone",
+          "route53:ListResourceRecordSets"
+        ]
+        Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "ecr:ListTagsForResource",
+          "ecr:DescribeRepositories",
+          "ecr:GetLifecyclePolicy"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "github_actions_iam" {
+  role       = aws_iam_role.github_actions.name
+  policy_arn = aws_iam_policy.github_actions_iam.arn
+}
