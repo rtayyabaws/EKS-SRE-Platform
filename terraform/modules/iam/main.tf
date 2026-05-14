@@ -232,29 +232,6 @@ resource "aws_iam_policy" "github_actions_eks" {
         Effect = "Allow"
         Action = [
           "eks:DescribeCluster",
-          "eks:ListClusters"
-        ]
-        Resource = "arn:aws:eks:eu-west-2:595552412690:cluster/eks-sre-platform"
-      }
-    ]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "github_actions_eks" {
-  role       = aws_iam_role.github_actions.name
-  policy_arn = aws_iam_policy.github_actions_eks.arn
-}
-
-resource "aws_iam_policy" "github_actions_eks" {
-  name = "${var.project_name}-github-actions-eks-policy"
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect = "Allow"
-        Action = [
-          "eks:DescribeCluster",
           "eks:ListClusters",
           "eks:AccessKubernetesApi"
         ]
@@ -267,44 +244,4 @@ resource "aws_iam_policy" "github_actions_eks" {
 resource "aws_iam_role_policy_attachment" "github_actions_eks" {
   role       = aws_iam_role.github_actions.name
   policy_arn = aws_iam_policy.github_actions_eks.arn
-}
-
-resource "aws_iam_policy" "github_actions_eks" {
-  name = "${var.project_name}-github-actions-eks-policy"
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect = "Allow"
-        Action = [
-          "eks:DescribeCluster",
-          "eks:ListClusters",
-          "eks:AccessKubernetesApi"
-        ]
-        Resource = "arn:aws:eks:eu-west-2:595552412690:cluster/eks-sre-platform"
-      }
-    ]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "github_actions_eks" {
-  role       = aws_iam_role.github_actions.name
-  policy_arn = aws_iam_policy.github_actions_eks.arn
-}
-
-resource "aws_eks_access_entry" "github_actions" {
-  cluster_name  = aws_eks_cluster.this.name
-  principal_arn = var.github_actions_role_arn
-  type          = "STANDARD"
-}
-
-resource "aws_eks_access_policy_association" "github_actions" {
-  cluster_name  = aws_eks_cluster.this.name
-  principal_arn = var.github_actions_role_arn
-  policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
-
-  access_scope {
-    type = "cluster"
-  }
 }

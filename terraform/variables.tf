@@ -82,3 +82,4 @@ variable "tags" {
   description = "Common tags applied to AWS resources."
   type        = map(string)
 }
+

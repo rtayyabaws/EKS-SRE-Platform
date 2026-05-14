@@ -49,6 +49,12 @@ variable "tags" {
 }
 
 variable "cluster_admin_principal_arn" {
-  description = "IAM principal ARN to grant admin access to the EKS cluster"
+  description = "IAM principal ARN to grant admin access to the EKS cluster."
   type        = string
 }
+
+variable "github_actions_role_arn" {
+  description = "IAM role ARN for GitHub Actions — needs cluster access for destroy pipeline."
+  type        = string
+}
+
