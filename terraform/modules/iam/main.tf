@@ -189,3 +189,40 @@ resource "aws_iam_role_policy_attachment" "external_dns_route53" {
   role       = aws_iam_role.external_dns.name
   policy_arn = aws_iam_policy.external_dns_route53.arn
 }
+
+resource "aws_iam_policy" "github_actions_s3" {
+  name = "${var.project_name}-github-actions-s3-policy"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:DeleteObject",
+          "s3:ListBucket"
+        ]
+        Resource = [
+          "arn:aws:s3:::eks-sre-platform-terraform-state",
+          "arn:aws:s3:::eks-sre-platform-terraform-state/*"
+        ]
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "dynamodb:GetItem",
+          "dynamodb:PutItem",
+          "dynamodb:DeleteItem"
+        ]
+        Resource = "arn:aws:dynamodb:eu-west-2:*:table/eks-sre-platform-terraform-state-lock"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "github_actions_s3" {
+  role       = aws_iam_role.github_actions.name
+  policy_arn = aws_iam_policy.github_actions_s3.arn
+}
