@@ -6,11 +6,9 @@ resource "aws_iam_role" "eks_cluster_role" {
     Statement = [
       {
         Effect = "Allow"
-
         Principal = {
           Service = "eks.amazonaws.com"
         }
-
         Action = "sts:AssumeRole"
       }
     ]
@@ -32,11 +30,9 @@ resource "aws_iam_role" "eks_node_role" {
     Statement = [
       {
         Effect = "Allow"
-
         Principal = {
           Service = "ec2.amazonaws.com"
         }
-
         Action = "sts:AssumeRole"
       }
     ]
@@ -72,6 +68,10 @@ resource "aws_iam_openid_connect_provider" "github" {
   ]
 
   tags = var.tags
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "aws_iam_role" "github_actions" {
@@ -99,6 +99,10 @@ resource "aws_iam_role" "github_actions" {
   })
 
   tags = var.tags
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "aws_iam_policy" "github_actions_ecr" {
@@ -208,15 +212,6 @@ resource "aws_iam_policy" "github_actions_s3" {
           "arn:aws:s3:::eks-sre-platform-terraform-state",
           "arn:aws:s3:::eks-sre-platform-terraform-state/*"
         ]
-      },
-      {
-        Effect = "Allow"
-        Action = [
-          "dynamodb:GetItem",
-          "dynamodb:PutItem",
-          "dynamodb:DeleteItem"
-        ]
-        Resource = "arn:aws:dynamodb:eu-west-2:*:table/eks-sre-platform-terraform-state-lock"
       }
     ]
   })
