@@ -9,10 +9,12 @@ permissions:
 
 env:
   AWS_REGION: eu-west-2
+  TF_VAR_app_domain_name: eks.nourdemo.com
 
 jobs:
   terraform-destroy:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
 
     defaults:
       run:
@@ -34,5 +36,24 @@ jobs:
       - name: Terraform init
         run: terraform init
 
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v3
+
+      - name: Configure kubectl
+        run: |
+          aws eks update-kubeconfig \
+            --region ${{ env.AWS_REGION }} \
+            --name eks-sre-platform
+
+      - name: Delete ingress-nginx service to release NLB
+        run: |
+          echo "Deleting ingress-nginx controller service..."
+          kubectl delete svc ingress-nginx-controller \
+            -n ingress-nginx \
+            --ignore-not-found=true
+          echo "Waiting 90s for NLB to fully deprovision..."
+          sleep 90
+
       - name: Terraform destroy
         run: terraform destroy -auto-approve
+        timeout-minutes: 45
