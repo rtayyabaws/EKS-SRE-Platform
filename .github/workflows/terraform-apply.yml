@@ -13,6 +13,7 @@ env:
 jobs:
   terraform-apply:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
 
     defaults:
       run:
@@ -39,3 +40,23 @@ jobs:
 
       - name: Terraform apply
         run: terraform apply -auto-approve
+
+      - name: Configure kubectl
+        run: |
+          aws eks update-kubeconfig \
+            --region ${{ env.AWS_REGION }} \
+            --name eks-sre-platform
+
+      - name: Install ArgoCD
+        run: |
+          kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
+          helm repo add argo https://argoproj.github.io/argo-helm
+          helm repo update
+          helm upgrade --install argocd argo/argo-cd \
+            --namespace argocd \
+            --wait \
+            --timeout 10m
+
+      - name: Bootstrap platform
+        working-directory: .
+        run: kubectl apply -f argocd/apps/root-app.yaml
