@@ -56,15 +56,20 @@ def version():
 def slow():
     REQUEST_COUNT.labels(endpoint="/slow").inc()
     with REQUEST_LATENCY.labels(endpoint="/slow").time():
-        time.sleep(3)
-    return {"message": "slow response generated"}
+        # CPU-intensive computation to trigger HPA scaling
+        result = sum(i * i for i in range(500000))
+    return {"message": "slow response generated", "result": result}
 
 
 @app.get("/error")
 def error():
     REQUEST_COUNT.labels(endpoint="/error").inc()
     logging.error("Simulated application error triggered")
-    return Response(content='{"error":"simulated failure"}', media_type="application/json", status_code=500)
+    return Response(
+        content='{"error":"simulated failure"}',
+        media_type="application/json",
+        status_code=500
+    )
 
 
 @app.get("/log")
