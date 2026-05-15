@@ -105,42 +105,6 @@ resource "aws_iam_role" "github_actions" {
   }
 }
 
-resource "aws_iam_policy" "github_actions_ecr" {
-  name = "${var.project_name}-github-actions-ecr-policy"
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect = "Allow"
-        Action = [
-          "ecr:GetAuthorizationToken"
-        ]
-        Resource = "*"
-      },
-      {
-        Effect = "Allow"
-        Action = [
-          "ecr:BatchCheckLayerAvailability",
-          "ecr:CompleteLayerUpload",
-          "ecr:InitiateLayerUpload",
-          "ecr:PutImage",
-          "ecr:UploadLayerPart",
-          "ecr:BatchGetImage",
-          "ecr:DescribeRepositories",
-          "ecr:DescribeImages"
-        ]
-        Resource = "arn:aws:ecr:eu-west-2:595552412690:repository/sre-demo-app"
-      }
-    ]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "github_actions_ecr" {
-  role       = aws_iam_role.github_actions.name
-  policy_arn = aws_iam_policy.github_actions_ecr.arn
-}
-
 resource "aws_iam_role" "external_dns" {
   name = "${var.project_name}-external-dns-role"
 
@@ -194,12 +158,29 @@ resource "aws_iam_role_policy_attachment" "external_dns_route53" {
   policy_arn = aws_iam_policy.external_dns_route53.arn
 }
 
-resource "aws_iam_policy" "github_actions_s3" {
-  name = "${var.project_name}-github-actions-s3-policy"
+resource "aws_iam_policy" "github_actions_ci" {
+  name = "${var.project_name}-github-actions-ci-policy"
 
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ecr:GetAuthorizationToken",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:CompleteLayerUpload",
+          "ecr:InitiateLayerUpload",
+          "ecr:PutImage",
+          "ecr:UploadLayerPart",
+          "ecr:BatchGetImage",
+          "ecr:DescribeRepositories",
+          "ecr:DescribeImages",
+          "ecr:ListTagsForResource",
+          "ecr:GetLifecyclePolicy"
+        ]
+        Resource = "*"
+      },
       {
         Effect = "Allow"
         Action = [
@@ -212,46 +193,14 @@ resource "aws_iam_policy" "github_actions_s3" {
           "arn:aws:s3:::eks-sre-platform-terraform-state",
           "arn:aws:s3:::eks-sre-platform-terraform-state/*"
         ]
-      }
-    ]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "github_actions_s3" {
-  role       = aws_iam_role.github_actions.name
-  policy_arn = aws_iam_policy.github_actions_s3.arn
-}
-
-resource "aws_iam_policy" "github_actions_eks" {
-  name = "${var.project_name}-github-actions-eks-policy"
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
+      },
       {
         Effect = "Allow"
         Action = [
-          "eks:DescribeCluster",
-          "eks:ListClusters",
-          "eks:AccessKubernetesApi"
+          "eks:*"
         ]
-        Resource = "arn:aws:eks:eu-west-2:595552412690:cluster/eks-sre-platform"
-      }
-    ]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "github_actions_eks" {
-  role       = aws_iam_role.github_actions.name
-  policy_arn = aws_iam_policy.github_actions_eks.arn
-}
-
-resource "aws_iam_policy" "github_actions_iam" {
-  name = "${var.project_name}-github-actions-iam-policy"
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
+        Resource = "*"
+      },
       {
         Effect = "Allow"
         Action = [
@@ -264,11 +213,19 @@ resource "aws_iam_policy" "github_actions_iam" {
           "iam:ListInstanceProfilesForRole",
           "iam:ListPolicyVersions",
           "iam:CreateRole",
+          "iam:DeleteRole",
           "iam:CreatePolicy",
+          "iam:DeletePolicy",
           "iam:AttachRolePolicy",
+          "iam:DetachRolePolicy",
           "iam:PassRole",
           "iam:TagRole",
-          "iam:TagPolicy"
+          "iam:TagPolicy",
+          "iam:CreateOpenIDConnectProvider",
+          "iam:DeleteOpenIDConnectProvider",
+          "iam:GetOpenIDConnectProvider",
+          "iam:CreatePolicyVersion",
+          "iam:DeletePolicyVersion"
         ]
         Resource = "*"
       },
@@ -277,16 +234,46 @@ resource "aws_iam_policy" "github_actions_iam" {
         Action = [
           "route53:ListHostedZones",
           "route53:GetHostedZone",
-          "route53:ListResourceRecordSets"
+          "route53:ListResourceRecordSets",
+          "route53:ListTagsForResource",
+          "route53:ChangeResourceRecordSets"
         ]
         Resource = "*"
       },
       {
         Effect = "Allow"
         Action = [
-          "ecr:ListTagsForResource",
-          "ecr:DescribeRepositories",
-          "ecr:GetLifecyclePolicy"
+          "ec2:Describe*",
+          "ec2:CreateVpc",
+          "ec2:DeleteVpc",
+          "ec2:CreateSubnet",
+          "ec2:DeleteSubnet",
+          "ec2:CreateInternetGateway",
+          "ec2:DeleteInternetGateway",
+          "ec2:AttachInternetGateway",
+          "ec2:DetachInternetGateway",
+          "ec2:CreateNatGateway",
+          "ec2:DeleteNatGateway",
+          "ec2:AllocateAddress",
+          "ec2:ReleaseAddress",
+          "ec2:CreateRouteTable",
+          "ec2:DeleteRouteTable",
+          "ec2:CreateRoute",
+          "ec2:DeleteRoute",
+          "ec2:AssociateRouteTable",
+          "ec2:DisassociateRouteTable",
+          "ec2:CreateVpcEndpoint",
+          "ec2:DeleteVpcEndpoints",
+          "ec2:ModifyVpcAttribute",
+          "ec2:CreateSecurityGroup",
+          "ec2:DeleteSecurityGroup",
+          "ec2:AuthorizeSecurityGroupIngress",
+          "ec2:AuthorizeSecurityGroupEgress",
+          "ec2:RevokeSecurityGroupIngress",
+          "ec2:RevokeSecurityGroupEgress",
+          "ec2:CreateTags",
+          "ec2:DeleteTags",
+          "ec2:ModifySubnetAttribute"
         ]
         Resource = "*"
       }
@@ -294,7 +281,7 @@ resource "aws_iam_policy" "github_actions_iam" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "github_actions_iam" {
+resource "aws_iam_role_policy_attachment" "github_actions_ci" {
   role       = aws_iam_role.github_actions.name
-  policy_arn = aws_iam_policy.github_actions_iam.arn
+  policy_arn = aws_iam_policy.github_actions_ci.arn
 }

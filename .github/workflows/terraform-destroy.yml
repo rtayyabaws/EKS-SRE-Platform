@@ -57,5 +57,10 @@ jobs:
           sleep 90
 
       - name: Terraform destroy
-        run: terraform destroy -auto-approve
+        run: |
+          terraform destroy -auto-approve \
+            -target=module.eks \
+            -target=module.vpc \
+            -target=module.ecr \
+            -target=aws_eks_pod_identity_association.external_dns
         timeout-minutes: 45
