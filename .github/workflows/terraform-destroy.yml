@@ -45,16 +45,20 @@ jobs:
         run: |
           aws eks update-kubeconfig \
             --region ${{ env.AWS_REGION }} \
-            --name eks-sre-platform
+            --name eks-sre-platform || echo "Cluster not found, skipping kubectl setup"
 
       - name: Delete ingress-nginx service to release NLB
         run: |
-          echo "Deleting ingress-nginx controller service..."
-          kubectl delete svc ingress-nginx-controller \
-            -n ingress-nginx \
-            --ignore-not-found=true
-          echo "Waiting 90s for NLB to fully deprovision..."
-          sleep 90
+          if kubectl cluster-info &>/dev/null 2>&1; then
+            echo "Deleting ingress-nginx controller service..."
+            kubectl delete svc ingress-nginx-controller \
+              -n ingress-nginx \
+              --ignore-not-found=true
+            echo "Waiting 90s for NLB to fully deprovision..."
+            sleep 90
+          else
+            echo "Cluster not reachable, skipping NLB cleanup"
+          fi
 
       - name: Terraform destroy
         run: |
