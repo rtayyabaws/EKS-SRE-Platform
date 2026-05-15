@@ -2,7 +2,7 @@ replicaCount: 2
 
 image:
   repository: 595552412690.dkr.ecr.eu-west-2.amazonaws.com/sre-demo-app
-  tag: f420f5e
+  tag: 9215a84
   pullPolicy: IfNotPresent
 
 serviceAccount:
