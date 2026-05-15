@@ -177,7 +177,9 @@ resource "aws_iam_policy" "github_actions_ci" {
           "ecr:DescribeRepositories",
           "ecr:DescribeImages",
           "ecr:ListTagsForResource",
-          "ecr:GetLifecyclePolicy"
+          "ecr:GetLifecyclePolicy",
+          "ecr:DeleteLifecyclePolicy",
+          "ecr:PutLifecyclePolicy"
         ]
         Resource = "*"
       },
@@ -256,6 +258,7 @@ resource "aws_iam_policy" "github_actions_ci" {
           "ec2:DeleteNatGateway",
           "ec2:AllocateAddress",
           "ec2:ReleaseAddress",
+          "ec2:DisassociateAddress",
           "ec2:CreateRouteTable",
           "ec2:DeleteRouteTable",
           "ec2:CreateRoute",
