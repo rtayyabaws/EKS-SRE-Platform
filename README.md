@@ -249,6 +249,12 @@ Load test (`scripts/load-test.sh`) sends 20 concurrent requests per second acros
 
 ---
 
+## Live Application
+
+The platform serves a real-time SRE status page at [eks.nourdemo.com](https://eks.nourdemo.com) showing live platform health, service status, Prometheus metrics, and Kubernetes pod information — all pulled directly from the running application.
+
+![Status Page](/docs/screenshots/Status%20website.png)
+
 ## Application Endpoints
 
 | Endpoint | Purpose |
