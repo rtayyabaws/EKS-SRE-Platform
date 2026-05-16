@@ -77,6 +77,53 @@ jobs:
             echo "ECR repository already empty"
           fi
 
+      - name: Clean up leftover ENIs
+        run: |
+          VPC_ID=$(aws ec2 describe-vpcs \
+            --filters "Name=tag:Name,Values=eks-sre-platform-vpc" \
+            --query "Vpcs[0].VpcId" \
+            --output text \
+            --region ${{ env.AWS_REGION }})
+
+          if [ "$VPC_ID" != "None" ] && [ -n "$VPC_ID" ]; then
+            echo "Found VPC: $VPC_ID, cleaning up ENIs..."
+            aws ec2 describe-network-interfaces \
+              --filters "Name=vpc-id,Values=$VPC_ID" \
+              --query "NetworkInterfaces[?Status=='available'].NetworkInterfaceId" \
+              --output text \
+              --region ${{ env.AWS_REGION }} | \
+              tr '\t' '\n' | \
+              while read eni; do
+                if [ -n "$eni" ]; then
+                  echo "Deleting ENI: $eni"
+                  aws ec2 delete-network-interface \
+                    --network-interface-id "$eni" \
+                    --region ${{ env.AWS_REGION }} || true
+                fi
+              done
+
+            echo "Releasing unattached EIPs..."
+            aws ec2 describe-addresses \
+              --filters "Name=domain,Values=vpc" \
+              --query "Addresses[?AssociationId==null].AllocationId" \
+              --output text \
+              --region ${{ env.AWS_REGION }} | \
+              tr '\t' '\n' | \
+              while read eip; do
+                if [ -n "$eip" ]; then
+                  echo "Releasing EIP: $eip"
+                  aws ec2 release-address \
+                    --allocation-id "$eip" \
+                    --region ${{ env.AWS_REGION }} || true
+                fi
+              done
+
+            echo "Waiting 30s for cleanup to propagate..."
+            sleep 30
+          else
+            echo "VPC not found, skipping ENI cleanup"
+          fi
+
       - name: Terraform destroy
         run: |
           terraform destroy -auto-approve \
