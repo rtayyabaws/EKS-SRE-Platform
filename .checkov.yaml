@@ -1,0 +1,13 @@
+skip-check:
+  - CKV_AWS_39   # EKS public endpoint required — no VPN or bastion in this environment
+  - CKV_AWS_38   # Public CIDR restriction — same reason as above
+  - CKV_AWS_355  # ExternalDNS Route53 list actions require wildcard resource by AWS API design
+  - CKV_AWS_136  # ECR AES256 encryption sufficient — KMS adds cost with no material benefit
+  - CKV_AWS_58   # EKS secrets KMS — AES256 sufficient for this environment
+  - CKV_AWS_145  # S3 KMS — AES256 encryption already enabled on state bucket
+  - CKV_AWS_144  # Cross-region replication — single-region portfolio project
+  - CKV2_AWS_62  # S3 event notifications — not applicable for Terraform state bucket
+  - CKV2_AWS_61  # S3 lifecycle — not required for state bucket at this scale
+  - CKV_AWS_18   # S3 access logging — not warranted for state bucket
+  - CKV2_AWS_11  # VPC flow logs — adds cost, no operational need here
+  - CKV2_AWS_12  # Default SG — handled via aws_default_security_group resource in vpc module

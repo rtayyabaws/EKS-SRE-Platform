@@ -39,6 +39,9 @@ jobs:
       - name: Terraform init
         run: terraform init
 
+      - name: Copy tfvars for CI
+        run: cp terraform.tfvars.example terraform.tfvars
+
       - name: Terraform format check
         run: terraform fmt -check
 
@@ -50,6 +53,7 @@ jobs:
         with:
           directory: terraform
           quiet: true
+          config_file: .checkov.yaml
 
       - name: Terraform plan
         run: terraform plan -input=false
