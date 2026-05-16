@@ -21,7 +21,9 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.service.targetPort }}
-          # Health probes allow Kubernetes to restart unhealthy pods and only route traffic when ready.
+          env:
+            - name: APP_VERSION
+              value: "{{ .Values.image.tag }}"
           livenessProbe:
             httpGet:
               path: {{ .Values.probes.liveness.path }}
@@ -34,6 +36,5 @@ spec:
               port: {{ .Values.service.targetPort }}
             initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
             periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
-          # Requests and limits improve scheduling reliability and protect the node from noisy-neighbour behaviour.
           resources:
 {{ toYaml .Values.resources | indent 12 }}
