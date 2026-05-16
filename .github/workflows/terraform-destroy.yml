@@ -87,20 +87,26 @@ jobs:
 
           if [ "$VPC_ID" != "None" ] && [ -n "$VPC_ID" ]; then
             echo "Found VPC: $VPC_ID, cleaning up ENIs..."
-            aws ec2 describe-network-interfaces \
-              --filters "Name=vpc-id,Values=$VPC_ID" \
-              --query "NetworkInterfaces[?Status=='available'].NetworkInterfaceId" \
-              --output text \
-              --region ${{ env.AWS_REGION }} | \
-              tr '\t' '\n' | \
-              while read eni; do
-                if [ -n "$eni" ]; then
-                  echo "Deleting ENI: $eni"
-                  aws ec2 delete-network-interface \
-                    --network-interface-id "$eni" \
-                    --region ${{ env.AWS_REGION }} || true
-                fi
-              done
+
+            for i in 1 2 3; do
+              echo "ENI cleanup attempt $i..."
+              aws ec2 describe-network-interfaces \
+                --filters "Name=vpc-id,Values=$VPC_ID" \
+                --query "NetworkInterfaces[?Status=='available'].NetworkInterfaceId" \
+                --output text \
+                --region ${{ env.AWS_REGION }} | \
+                tr '\t' '\n' | \
+                while read eni; do
+                  if [ -n "$eni" ]; then
+                    echo "Deleting ENI: $eni"
+                    aws ec2 delete-network-interface \
+                      --network-interface-id "$eni" \
+                      --region ${{ env.AWS_REGION }} || true
+                  fi
+                done
+              echo "Waiting 30s..."
+              sleep 30
+            done
 
             echo "Releasing unattached EIPs..."
             aws ec2 describe-addresses \
@@ -118,7 +124,7 @@ jobs:
                 fi
               done
 
-            echo "Waiting 30s for cleanup to propagate..."
+            echo "Final wait 30s before destroy..."
             sleep 30
           else
             echo "VPC not found, skipping ENI cleanup"
