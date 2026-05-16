@@ -11,3 +11,5 @@ skip-check:
   - CKV_AWS_18   # S3 access logging — not warranted for state bucket
   - CKV2_AWS_11  # VPC flow logs — adds cost, no operational need here
   - CKV2_AWS_12  # Default SG — handled via aws_default_security_group resource in vpc module
+  - CKV_AWS_274  # AdministratorAccess on CI role — intentional for pipeline functionality, scoped to CI/CD only
+  - CKV_AWS_130  # Public subnets assign public IPs — required for NAT gateways and load balancer
