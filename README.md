@@ -8,7 +8,7 @@ A production-style cloud-native platform deployed on Amazon EKS, demonstrating e
 
 ## Architecture
 
-![Architecture Diagram](/docs/screenshots/Architectural%20diagram.png)
+![Architecture Diagram](/docs/screenshots/EKS%20Gitops%20Platform.gif)
 
 The platform is built across three layers:
 
