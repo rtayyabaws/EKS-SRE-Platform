@@ -188,7 +188,7 @@ Triggered on pull requests touching `terraform/`:
 
 ### Pipeline 3 — Terraform Apply (`terraform-apply.yml`)
 
-Manual trigger only — provisions or updates AWS infrastructure:
+Manual trigger only and provisions or updates AWS infrastructure:
 
 1. `terraform apply -auto-approve`
 2. Bootstraps ArgoCD via Helm
@@ -198,7 +198,7 @@ Manual trigger only — provisions or updates AWS infrastructure:
 
 ### Pipeline 4 — Terraform Destroy (`terraform-destroy.yml`)
 
-Manual trigger only — tears down infrastructure cleanly:
+Manual trigger only and tears down infrastructure cleanly:
 
 1. Deletes ingress-nginx service to release the AWS NLB before VPC deletion
 2. `terraform destroy` scoped to exclude the OIDC provider and GitHub Actions role
@@ -221,7 +221,7 @@ Argo CD provides drift detection and self-healing. Rollbacks are a `git revert` 
 
 ### Grafana — SRE Application Dashboard
 
-Custom dashboard tracking HTTP request rate by endpoint, average request latency, pod CPU and memory usage, and ready pod count. Dashboard JSON is committed to Git — reproducible as an infrastructure artifact.
+Custom dashboard tracking HTTP request rate by endpoint, average request latency, pod CPU and memory usage, and ready pod count. Dashboard JSON is committed to Git and reproducible as an infrastructure artifact.
 
 ![Grafana SRE Dashboard](/docs/screenshots/grafana%20dash1.png)
 
@@ -243,7 +243,7 @@ Prometheus scrapes:
 
 The FastAPI app is configured with an HPA targeting 60% CPU utilisation, scaling between 2 and 6 replicas. The `/slow` endpoint performs CPU-intensive computation to drive CPU above the threshold, making it purpose-built for triggering and demonstrating autoscaling behaviour under load.
 
-Load test (`scripts/load-test.sh`) sends 20 concurrent requests per second across all endpoints. Under sustained load the HPA scales from 2 replicas to 6 within minutes, then scales back down once traffic stops — demonstrating the full scale-out and scale-in cycle.
+Load test (`scripts/load-test.sh`) sends 20 concurrent requests per second across all endpoints. Under sustained load the HPA scales from 2 replicas to 6 within minutes, then scales back down once traffic stops, demonstrating the full scale-out and scale-in cycle.
 
 ![HPA Scaling Demo](/docs/screenshots/hpa%20demo%20test%202%20.png)
 
@@ -251,7 +251,7 @@ Load test (`scripts/load-test.sh`) sends 20 concurrent requests per second acros
 
 ## Live Application
 
-The platform serves a real-time SRE status page at [eks.nourdemo.com](https://eks.nourdemo.com) showing live platform health, service status, Prometheus metrics, and Kubernetes pod information — all pulled directly from the running application.
+The platform serves a real-time SRE status page at [eks.nourdemo.com](https://eks.nourdemo.com) showing live platform health, service status, Prometheus metrics, and Kubernetes pod information. All pulled directly from the running application.
 
 ![Status Page](/docs/screenshots/Status%20website.png)
 
@@ -329,12 +329,12 @@ Approximate monthly cost when running:
 
 | Resource | Cost |
 |---|---|
-| EKS control plane | ~$73 |
-| EC2 worker nodes (2× t3.medium) | ~$60 |
-| NAT gateways (2×) | ~$32 |
-| Load balancer | ~$16 |
-| ECR, S3, Route53 | ~$5–10 |
-| **Total** | **~$186–191/month** |
+| EKS control plane | ~£57 |
+| EC2 worker nodes (2× t3.medium) | ~£47 |
+| NAT gateways (2×) | ~£25 |
+| Load balancer | ~£13 |
+| ECR, S3, Route53 | ~£4–8 |
+| **Total** | **~£146–150/month** |
 
 > Tear down with the destroy pipeline when not in use.
 
