@@ -1,48 +1,44 @@
+# Troubleshooting — Development Notes
+
 ## EKS managed node group AMI unsupported for Kubernetes 1.29
 
-During the first infrastructure apply, the EKS control plane was created successfully, but the managed node group failed with:
+**Problem:** EKS control plane created successfully but managed node group failed with `InvalidParameterException: Requested AMI for this version 1.29 is not supported`.
 
-`InvalidParameterException: Requested AMI for this version 1.29 is not supported`
+**Cause:** Kubernetes version 1.29 was outdated for current EKS managed node group AMI support.
 
-Root cause: the configured Kubernetes version was outdated for current EKS managed node group AMI support.
+**Fix:** Updated `kubernetes_version` from `1.29` to `1.32` in `terraform/terraform.tfvars.example` and re-ran `terraform apply`.
 
-Fix: updated `kubernetes_version` from `1.29` to `1.32` in Terraform variables and re-ran `terraform plan/apply`.
-
-
-## terraform
-
-Ran into a few validation errors that i forgot to record.
-
-
-
-
+---
 
 ## kubectl authentication failed after EKS provisioning
 
-### Issue
+**Problem:** After provisioning the EKS cluster, `kubectl get nodes` returned `error: You must be logged in to the server`.
 
-After successfully provisioning the EKS cluster with Terraform, `kubectl` could not authenticate to the Kubernetes API server.
+**Cause:** EKS requires the IAM principal to be explicitly granted cluster access. The local IAM user `nour-nonroot` had AWS permissions but was not mapped to Kubernetes cluster access.
 
-Command:
+**Fix:** Added an EKS access entry in Terraform and associated the `AmazonEKSClusterAdminPolicy` managed policy to the IAM user.
 
-```bash
-aws eks update-kubeconfig \
-  --region eu-west-2 \
-  --name eks-sre-platform
+```hcl
+resource "aws_eks_access_entry" "cluster_admin" {
+  cluster_name  = var.cluster_name
+  principal_arn = "arn:aws:iam::595552412690:user/nour-nonroot"
+  type          = "STANDARD"
+}
 
-kubectl get nodes
+resource "aws_eks_access_policy_association" "cluster_admin" {
+  cluster_name  = var.cluster_name
+  principal_arn = "arn:aws:iam::595552412690:user/nour-nonroot"
+  policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+  access_scope { type = "cluster" }
+}
+```
 
-error: You must be logged in to the server (the server has asked for the client to provide credentials)
+---
 
-Cause
+## EKS orphaned ENIs blocking subnet deletion
 
-The EKS cluster was successfully created, but the IAM principal used locally was not mapped to Kubernetes cluster access.
+**Problem:** `terraform destroy` fails with `DependencyViolation` on public subnets and IGW after node group terminates.
 
-Although the AWS IAM user had permissions to interact with AWS services, EKS requires the IAM principal to be explicitly granted cluster access.
+**Cause:** EKS attaches ENIs to subnets for pod networking. These are not always released immediately after the node group is destroyed, leaving dependencies that block subnet and IGW deletion.
 
-The active IAM identity was:
-
-arn:aws:iam::595552412690:user/nour-nonroot
-Fix
-
-Added an EKS access entry and associated the AWS managed cluster admin policy using Terraform.
+**Fix:** Added a retry-based ENI cleanup step to the destroy pipeline that runs after the NLB wait — finds all available ENIs in the VPC and deletes them before Terraform attempts to delete the subnets.

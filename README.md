@@ -12,9 +12,9 @@ A production-style cloud-native platform deployed on Amazon EKS, demonstrating e
 
 The platform is built across three layers:
 
-- **Infrastructure** — Terraform provisions a multi-AZ VPC, EKS cluster with managed node groups, IAM roles with OIDC federation, ECR, Route53, and ACM certificates. State is managed remotely in S3 with native S3 locking.
-- **Platform** — ingress-nginx, cert-manager, ExternalDNS, and kube-prometheus-stack are deployed via Helm and managed by Argo CD.
-- **Application** — Python/FastAPI service with health, readiness, and Prometheus metrics endpoints, deployed via Argo CD with an HPA for autoscaling.
+- **Infrastructure**: Terraform provisions a multi-AZ VPC, EKS cluster with managed node groups, IAM roles with OIDC federation, ECR, Route53, and ACM certificates. State is managed remotely in S3 with native S3 locking.
+- **Platform**:  ingress-nginx, cert-manager, ExternalDNS, and kube-prometheus-stack are deployed via Helm and managed by Argo CD.
+- **Application**: Python/FastAPI service with health, readiness, and Prometheus metrics endpoints, deployed via Argo CD with an HPA for autoscaling.
 
 
 
@@ -22,41 +22,41 @@ The platform is built across three layers:
 
 ### Kubernetes & Argo CD
 
-- **Amazon EKS** — managed Kubernetes control plane with node groups running in private subnets
-- **Argo CD** — continuously reconciles the cluster against this Git repository; any merged change is reflected in the cluster automatically
+- **Amazon EKS**: managed Kubernetes control plane with node groups running in private subnets
+- **Argo CD**: continuously reconciles the cluster against this Git repository; any merged change is reflected in the cluster automatically
 - All application manifests (Deployment, Service, Ingress, HPA, ServiceMonitor) are version-controlled and GitOps-managed
 
 ![Argo CD — all apps synced and healthy](/docs/screenshots/argocd.png)
 
 ### Networking & Ingress
 
-- **ingress-nginx** — the single entry point into the cluster, routing traffic based on Ingress rules
-- **AWS Load Balancer** — receives public traffic and forwards to ingress-nginx
-- **ExternalDNS** — watches Ingress resources and automatically creates/updates Route53 records; uses EKS Pod Identity to authenticate to AWS without storing credentials
+- **ingress-nginx**: the single entry point into the cluster, routing traffic based on Ingress rules
+- **AWS Load Balancer**: receives public traffic and forwards to ingress-nginx
+- **ExternalDNS**: watches Ingress resources and automatically creates/updates Route53 records; uses EKS Pod Identity to authenticate to AWS without storing credentials
 
 ### Certificate Management
 
-- **cert-manager** — provisions and renews TLS certificates automatically via Let's Encrypt DNS-01 challenge through Route53
+- **cert-manager**: provisions and renews TLS certificates automatically via Let's Encrypt DNS-01 challenge through Route53
 - Any Ingress annotated for TLS receives a valid certificate and Kubernetes secret; no manual renewal required
 
 ### Observability
 
-- **Prometheus** — scrapes app metrics, kube-state-metrics, node-exporter, kubelet, and ingress-nginx via ServiceMonitors
-- **Grafana** — visualises metrics through custom and imported dashboards; JSON exports committed to Git as reproducible infrastructure artifacts
-- **Loki** — deployed via Argo CD for log aggregation, with Promtail shipping logs from all pods across both nodes
+- **Prometheus**: scrapes app metrics, kube-state-metrics, node-exporter, kubelet, and ingress-nginx via ServiceMonitors
+- **Grafana**: visualises metrics through custom and imported dashboards; JSON exports committed to Git as reproducible infrastructure artifacts
+- **Loki**:  deployed via Argo CD for log aggregation, with Promtail shipping logs from all pods across both nodes
 
 ### Autoscaling
 
-- **Horizontal Pod Autoscaler** — scales the FastAPI app between 2 and 6 replicas based on CPU utilisation
-- **metrics-server** — deployed via Argo CD, provides the Kubernetes Metrics API that feeds real-time CPU data to the HPA
+- **Horizontal Pod Autoscaler**: scales the FastAPI app between 2 and 6 replicas based on CPU utilisation
+- **metrics-server**: deployed via Argo CD, provides the Kubernetes Metrics API that feeds real-time CPU data to the HPA
 
 ### Security
 
-- **No long-lived credentials** — GitHub Actions authenticates to AWS via OIDC federation; no static keys stored in secrets
-- **Trivy** — scans every Docker image for vulnerabilities before it reaches ECR
-- **Checkov** — runs against all Terraform manifests on every pipeline run; failures are documented and suppressed with explicit reasoning in `.checkov.yaml`
-- **Private node groups** — EKS workers run in private subnets; only the load balancer is public-facing
-- **Least-privilege IAM** — each workload component (ExternalDNS, cert-manager) has its own scoped IAM role via Pod Identity
+- **No long-lived credentials**: GitHub Actions authenticates to AWS via OIDC federation; no static keys stored in secrets
+- **Trivy**: scans every Docker image for vulnerabilities before it reaches ECR
+- **Checkov**:  runs against all Terraform manifests on every pipeline run; failures are documented and suppressed with explicit reasoning in `.checkov.yaml`
+- **Private node groups**: EKS workers run in private subnets; only the load balancer is public-facing
+- **Least-privilege IAM**: each workload component (ExternalDNS, cert-manager) has its own scoped IAM role via Pod Identity
 
 ---
 
@@ -406,7 +406,7 @@ aws iam create-open-id-connect-provider \
 
 ---
 
-## Key Learnings
+## Operational notes
 
 - GitOps with Argo CD means Git is the only interface for deployments — no manual `kubectl apply`, no configuration drift, rollbacks are a `git revert`
 - Committing Grafana dashboard JSON to Git treats observability as infrastructure, not manual ops configuration
