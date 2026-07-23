@@ -7,6 +7,10 @@ from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_
 
 app = FastAPI(title="EKS SRE Platform")
 
+@app.on_event("startup")
+async def intentional_startup_failure():
+    raise RuntimeError("Intentional broken release for Kubernetes rollback lab")
+
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
 REQUEST_COUNT = Counter(
