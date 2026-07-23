@@ -97,7 +97,7 @@ resource "aws_iam_role" "github_actions" {
             "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
           }
           StringLike = {
-            "token.actions.githubusercontent.com:sub" = "repo:rtayyabaws@97921411/EKS-SRE-Platform:*"
+            "token.actions.githubusercontent.com:sub" = "repo:rtayyabaws@97921411/EKS-SRE-Platform@1308757261:*"
           }
         }
       }
