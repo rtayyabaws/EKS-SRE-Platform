@@ -1,8 +1,8 @@
 terraform {
   backend "s3" {
-    bucket       = "eks-sre-platform-terraform-state"
+    bucket       = "205930609978-rehan-eks-sre-tfstate"
     key          = "platform/terraform.tfstate"
-    region       = "eu-west-2"
+    region       = "us-east-1"
     encrypt      = true
     use_lockfile = true
   }

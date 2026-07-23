@@ -1,6 +1,6 @@
 #!/bin/bash
 
-URL="https://eks.nourdemo.com"
+URL="https://eks.rehangatus.click"
 
 echo "Starting load test against $URL"
 echo "Press CTRL+C to stop."

@@ -56,22 +56,28 @@ resource "aws_iam_role_policy_attachment" "ecr_read_only" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
-resource "aws_iam_openid_connect_provider" "github" {
+#resource "aws_iam_openid_connect_provider" "github" {
+#  url = "https://token.actions.githubusercontent.com"
+
+#  client_id_list = [
+#    "sts.amazonaws.com"
+#  ]
+
+#  thumbprint_list = [
+#    "6938fd4d98bab03faadb97b34396831e3780aea1"
+#  ]
+
+#  tags = var.tags
+
+#  lifecycle {
+#    prevent_destroy = true
+#  }
+#}
+
+
+
+data "aws_iam_openid_connect_provider" "github" {
   url = "https://token.actions.githubusercontent.com"
-
-  client_id_list = [
-    "sts.amazonaws.com"
-  ]
-
-  thumbprint_list = [
-    "6938fd4d98bab03faadb97b34396831e3780aea1"
-  ]
-
-  tags = var.tags
-
-  lifecycle {
-    prevent_destroy = true
-  }
 }
 
 resource "aws_iam_role" "github_actions" {
@@ -83,7 +89,7 @@ resource "aws_iam_role" "github_actions" {
       {
         Effect = "Allow"
         Principal = {
-          Federated = aws_iam_openid_connect_provider.github.arn
+          Federated = data.aws_iam_openid_connect_provider.github.arn
         }
         Action = "sts:AssumeRoleWithWebIdentity"
         Condition = {
@@ -91,7 +97,7 @@ resource "aws_iam_role" "github_actions" {
             "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
           }
           StringLike = {
-            "token.actions.githubusercontent.com:sub" = "repo:LeN0UR/EKS-SRE-Platform:*"
+            "token.actions.githubusercontent.com:sub" = "repo:rtayyabaws/EKS-SRE-Platform:*"
           }
         }
       }
@@ -100,9 +106,9 @@ resource "aws_iam_role" "github_actions" {
 
   tags = var.tags
 
-  lifecycle {
-    prevent_destroy = true
-  }
+  #  lifecycle {
+  #    prevent_destroy = true
+  #  }
 }
 
 resource "aws_iam_role" "external_dns" {
@@ -138,7 +144,7 @@ resource "aws_iam_policy" "external_dns_route53" {
         Action = [
           "route53:ChangeResourceRecordSets"
         ]
-        Resource = "arn:aws:route53:::hostedzone/Z02511943Q6RIQDL3GQVU"
+        Resource = "arn:aws:route53:::hostedzone/Z0412028NH1GM6GOQTNX"
       },
       {
         Effect = "Allow"

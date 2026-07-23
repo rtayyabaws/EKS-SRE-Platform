@@ -7,7 +7,7 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/LeN0UR/eks-sre-platform.git
+    repoURL: https://github.com/rtayyabaws/EKS-SRE-Platform.git
     targetRevision: main
     path: helm/sre-demo-app
 

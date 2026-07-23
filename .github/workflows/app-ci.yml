@@ -16,7 +16,7 @@ permissions:
   contents: write
 
 env:
-  AWS_REGION: eu-west-2
+  AWS_REGION: us-east-1
   ECR_REPOSITORY: sre-demo-app
   HELM_VALUES_FILE: helm/sre-demo-app/values.yaml
 

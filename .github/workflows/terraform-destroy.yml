@@ -8,7 +8,7 @@ permissions:
   contents: read
 
 env:
-  AWS_REGION: eu-west-2
+  AWS_REGION: us-east-1
 
 jobs:
   terraform-destroy:
@@ -45,7 +45,7 @@ jobs:
         run: |
           aws eks update-kubeconfig \
             --region ${{ env.AWS_REGION }} \
-            --name eks-sre-platform || echo "Cluster not found, skipping kubectl setup"
+            --name rehan-eks-cluster || echo "Cluster not found, skipping kubectl setup"
 
       - name: Delete ingress-nginx service to release NLB
         run: |
@@ -80,7 +80,7 @@ jobs:
       - name: Clean up leftover ENIs
         run: |
           VPC_ID=$(aws ec2 describe-vpcs \
-            --filters "Name=tag:Name,Values=eks-sre-platform-vpc" \
+            --filters "Name=tag:Name,Values=rehan-eks-sre-project-vpc" \
             --query "Vpcs[0].VpcId" \
             --output text \
             --region ${{ env.AWS_REGION }})

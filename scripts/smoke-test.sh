@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-APP_URL="${1:-https://eks.nourdemo.com}"
+APP_URL="${1:-https://eks.rehangatus.click}"
 
 echo "Running smoke tests against: $APP_URL"
 

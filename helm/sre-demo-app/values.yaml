@@ -1,7 +1,7 @@
 replicaCount: 2
 
 image:
-  repository: 595552412690.dkr.ecr.eu-west-2.amazonaws.com/sre-demo-app
+  repository: 205930609978.dkr.ecr.us-east-1.amazonaws.com/sre-demo-app
   tag: 55f36ab
   pullPolicy: IfNotPresent
 
@@ -17,13 +17,13 @@ service:
 ingress:
   enabled: true
   className: nginx
-  host: eks.nourdemo.com
+  host: eks.rehangatus.click
   tls:
     enabled: true
     secretName: sre-demo-app-tls
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    external-dns.alpha.kubernetes.io/hostname: eks.nourdemo.com
+    external-dns.alpha.kubernetes.io/hostname: eks.rehangatus.click
 
 resources:
   requests:

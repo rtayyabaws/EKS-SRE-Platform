@@ -163,7 +163,7 @@ STATUS_PAGE = """<!DOCTYPE html>
   <div class="header">
     <div>
       <div class="title">EKS SRE Platform</div>
-      <div class="subtitle">eks.nourdemo.com &nbsp;·&nbsp; eu-west-2</div>
+      <div class="subtitle">eks.rehangatus.click &nbsp;·&nbsp; us-east-1</div>
     </div>
     <div class="status-badge">
       <div class="dot"></div>
@@ -265,11 +265,11 @@ STATUS_PAGE = """<!DOCTYPE html>
     <div class="platform-grid">
       <div class="platform-item">
         <div class="platform-key">Cluster</div>
-        <div class="platform-val">eks-sre-platform</div>
+        <div class="platform-val">rehan-eks-cluster</div>
       </div>
       <div class="platform-item">
         <div class="platform-key">Region</div>
-        <div class="platform-val">eu-west-2</div>
+        <div class="platform-val">us-east-1</div>
       </div>
       <div class="platform-item">
         <div class="platform-key">Version</div>
@@ -281,7 +281,7 @@ STATUS_PAGE = """<!DOCTYPE html>
       </div>
       <div class="platform-item">
         <div class="platform-key">Kubernetes</div>
-        <div class="platform-val">1.32</div>
+        <div class="platform-val">1.34</div>
       </div>
       <div class="platform-item">
         <div class="platform-key">Runtime</div>

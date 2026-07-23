@@ -1,11 +1,11 @@
-aws_region   = "eu-west-2"
-project_name = "eks-sre-platform"
+aws_region   = "us-east-1"
+project_name = "rehan-eks-sre-project"
 
 vpc_cidr = "10.0.0.0/16"
 
 availability_zones = [
-  "eu-west-2a",
-  "eu-west-2b"
+  "us-east-1a",
+  "us-east-1b"
 ]
 
 public_subnet_cidrs = [
@@ -18,8 +18,8 @@ private_subnet_cidrs = [
   "10.0.48.0/20"
 ]
 
-cluster_name       = "eks-sre-platform"
-kubernetes_version = "1.32"
+cluster_name       = "rehan-eks-cluster"
+kubernetes_version = "1.34"
 
 instance_types    = ["t3.medium"]
 node_desired_size = 2
@@ -29,10 +29,10 @@ node_max_size     = 3
 repository_name = "sre-demo-app"
 max_image_count = 10
 
-domain_name     = "nourdemo.com"
-app_domain_name = "eks.nourdemo.com"
+domain_name     = "rehangatus.click"
+app_domain_name = "eks.rehangatus.click"
 
 tags = {
-  Project   = "eks-sre-platform"
+  Project   = "rehan-eks-sre-project"
   ManagedBy = "Terraform"
 }

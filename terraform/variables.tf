@@ -76,7 +76,7 @@ variable "domain_name" {
 variable "app_domain_name" {
   description = "Application subdomain managed by ExternalDNS."
   type        = string
-  default     = "eks.nourdemo.com"
+  default     = "eks.rehangatus.click"
 }
 
 variable "tags" {

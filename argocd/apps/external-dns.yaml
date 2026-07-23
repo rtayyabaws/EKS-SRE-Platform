@@ -18,10 +18,10 @@ spec:
 
         policy: sync
 
-        txtOwnerId: eks-sre-platform
+        txtOwnerId: rehan-eks-cluster
 
         domainFilters:
-          - nourdemo.com
+          - rehangatus.click
 
         serviceAccount:
           create: true
