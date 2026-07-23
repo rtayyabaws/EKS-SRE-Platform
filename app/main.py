@@ -162,7 +162,7 @@ STATUS_PAGE = """<!DOCTYPE html>
 <div class="container">
   <div class="header">
     <div>
-      <div class="title">EKS SRE Platform</div>
+      <div class="title">Rehan EKS SRE Platform — Version 2</div>
       <div class="subtitle">eks.rehangatus.click &nbsp;·&nbsp; us-east-1</div>
     </div>
     <div class="status-badge">
