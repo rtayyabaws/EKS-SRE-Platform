@@ -39,7 +39,7 @@ probes:
     initialDelaySeconds: 10
     periodSeconds: 10
   readiness:
-    path: /readyz-broken
+    path: /readyz
     initialDelaySeconds: 5
     periodSeconds: 5
 
