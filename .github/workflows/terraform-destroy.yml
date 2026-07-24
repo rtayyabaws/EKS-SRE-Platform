@@ -60,22 +60,22 @@ jobs:
             echo "Cluster not reachable, skipping NLB cleanup"
           fi
 
-      - name: Empty ECR repository
-        run: |
-          IMAGE_IDS=$(aws ecr list-images \
-            --repository-name sre-demo-app \
-            --region ${{ env.AWS_REGION }} \
-            --query 'imageIds[*]' \
-            --output json)
-          if [ "$IMAGE_IDS" != "[]" ]; then
-            echo "Deleting images from ECR..."
-            aws ecr batch-delete-image \
-              --repository-name sre-demo-app \
-              --region ${{ env.AWS_REGION }} \
-              --image-ids "$IMAGE_IDS"
-          else
-            echo "ECR repository already empty"
-          fi
+      #- name: Empty ECR repository
+      #  run: |
+      #    IMAGE_IDS=$(aws ecr list-images \
+      #      --repository-name sre-demo-app \
+      #      --region ${{ env.AWS_REGION }} \
+      #      --query 'imageIds[*]' \
+      #      --output json)
+      #    if [ "$IMAGE_IDS" != "[]" ]; then
+      #      echo "Deleting images from ECR..."
+      #      aws ecr batch-delete-image \
+      #        --repository-name sre-demo-app \
+      #        --region ${{ env.AWS_REGION }} \
+      #        --image-ids "$IMAGE_IDS"
+      #    else
+      #      echo "ECR repository already empty"
+      #    fi
 
       - name: Clean up leftover ENIs
         run: |
@@ -135,6 +135,5 @@ jobs:
           terraform destroy -auto-approve \
             -target=module.eks \
             -target=module.vpc \
-            -target=module.ecr \
             -target=aws_eks_pod_identity_association.external_dns
         timeout-minutes: 45
